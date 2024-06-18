@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synthèse Félix Brouillet</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="app">
+        <div class="accueil" v-if="page_active == 'accueil'">
+            <h1>Bienvenue dans votre application de lecture de musique</h1>
+            <a href="#" @click.prevent="changerPage('lecteur')">Écouter de la musique</a>
+        </div>
+
+        <div class="lecteur" v-if="page_active == 'lecteur'">
+
+            <h3>Faire une recherche :</h3>
+            <div class="recherche">
+                <input type="text" v-model="texte_recherche" placeholder="Recherche...">
+            </div>
+
+            <h1>Sélectionner une chanson</h1>
+            <div class="chansons" v-for="chanson of filtrer(infos_chanson)">
+                <p class="nom_chanson">Titre : {{ chanson.titre }}</p>
+                <p class="auteur_chanson">Auteur : {{ chanson.artiste }}</p>
+                <p class="duree_chanson">Durée : {{ convertirDuree(chanson.temps) }}</p>
+
+                <img class="mini_img_chanson" :src="'chansons/' + chanson.image">
+
+                <a href="#" @click.prevent="changerChanson('nom_chanson', chanson)">Jouer cette chanson</a>
+            </div>
+
+            <div class="lecteur_musique" v-if="chanson_active == 'nom_chanson'">
+                <h1>Chanson en cours de lecture:</h1>
+                <h2>Titre : {{ params.titre }}</h2>
+                <h2>Auteur : {{ params.artiste }}</h2>
+                <h2>Tags : {{ params.tags.join(', ') }}</h2>
+                <img class="image_lecteur" :src="'chansons/' + params.image" alt="">
+              
+                <div class="controls" @click="toggleJouer()">PLAY/PAUSE</div>
+
+                <div>
+                    VOLUME : 
+                    <input type="range" v-model="volume" min="0" max="1" step="0.1" @input="controlVolume(volume)">
+                </div>
+
+                <div class="progress-bar">
+                  <div class="progress" :style="{ width: progress + '%' }"></div>
+                </div>
+
+                <audio :src="'chansons/' + params.audio" 
+                        class="lecteur_html" 
+                        autoplay ref="balise_audio" 
+                        @timeupdate="updateProgress">
+                </audio>
+
+              
+                
+                
+                <a href="#" @click.prevent="changerPage('accueil')">Retour à l'accueil</a>
+            </div>
+              
+    </div>
+
+<script src="js/main.js" type="module"></script>
+</body>
+</html>
